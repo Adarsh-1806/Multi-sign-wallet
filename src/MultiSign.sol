@@ -6,12 +6,14 @@ contract MultiSigWallet {
    event TransactionCreated(uint256 indexed ransactionId, address indexed receiver,uint256 amount,bytes data);
    event TransactionApproved(address indexed signer,uint256 transactionId);
    event TransactionExecuted(address indexed sender, uint256 amount);
-//    event TransactionConfirmed()
-   address public owner;
+
    address[] public signers ;
+   address public owner;
+   uint256 transactionId;
    uint8 public required_approvals;
    mapping(address => bool ) isSigner;
    mapping(uint256 => mapping(address => bool)) approvals;
+
    struct Transaction {
     address to;
     uint256 value;
@@ -20,7 +22,6 @@ contract MultiSigWallet {
     uint8 n_of_confirmations;
    }
    
-   uint256 transactionId;
    mapping(uint256 => Transaction) transactions;
     
     modifier onlyOwner(address _owner){
@@ -81,6 +82,7 @@ contract MultiSigWallet {
 
     function getTransaction(uint256 _id) public view returns(Transaction memory){
         return transactions[_id];
+   
     }
     function addSigner(address[] memory _newSigner) public onlyOwner(msg.sender){
         uint8 length= uint8(_newSigner.length);
@@ -90,6 +92,7 @@ contract MultiSigWallet {
             signers.push(_newSigner[i]);   
         }
     }
+   
    receive() payable external {
     emit Deposite(msg.sender, msg.value);
    }
