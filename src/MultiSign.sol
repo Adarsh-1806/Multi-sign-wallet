@@ -45,7 +45,11 @@ contract MultiSigWallet {
         require(_signers.length == _required_approvals,"Need to approve Trasaction by all owner");
         owner = msg.sender;
         for(uint8 i=0 ;i<_signers.length;i++){
-            isSigner[_signers[i]]=true;
+            address signer = _signers[i];
+            
+            require(signer != address(0));
+            require(isSigner[signer] == false,"Alredy Existed");
+            isSigner[signer]=true;
         }
         signers = _signers;
         required_approvals = _required_approvals;
@@ -62,7 +66,7 @@ contract MultiSigWallet {
         );
         emit TransactionCreated(transactionId, _to, _value, _data);
     }
-    function approveTransaction(uint256 _id) public onlyExist(_id) notExecuted(_id) onlySigner(msg.sender){
+    function approveTransaction(uint256 _id) public onlyExist(_id) onlySigner(msg.sender) notExecuted(_id) {
         
         Transaction storage tnx = transactions[_id];
         approvals[_id][msg.sender] = true;
