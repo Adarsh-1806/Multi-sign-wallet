@@ -2,7 +2,7 @@
 pragma solidity ^0.8.13;
 
 import "forge-std/src/Test.sol";
-import "../src/Counter.sol";
+import "../MultiSig wallet/MultiSig.sol";
 
 contract CounterTest is Test {
     Counter public counter;
